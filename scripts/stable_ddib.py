@@ -162,8 +162,8 @@ def main():
     )
     parser.add_argument(
         "--scale",
-        type=float,
-        default=7.5,
+        type=str,
+        default="7.5",
         help="unconditional guidance scale: eps = eps(x, empty) + scale * (eps(x, cond) - eps(x, empty))",
     )
     parser.add_argument(
@@ -224,6 +224,7 @@ def main():
     opt.cond_betas1 = [float(s) for s in opt.cond_betas1.split(',')]  # NOTE: always assume the first is single score
     opt.cond_betas2 = [float(s) for s in opt.cond_betas2.split(',')]
     assert len(opt.cond_betas1) == len(opt.cond_betas2)
+    opt.scale = [float(s) for s in opt.scale.split(',')]
 
     config = OmegaConf.load(f"{opt.config}")
     model = load_model_from_config(

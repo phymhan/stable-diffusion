@@ -5,10 +5,7 @@ Rewrite according to DiffusionCLIP, better for inversion.
 import torch
 import numpy as np
 from tqdm import tqdm
-from functools import partial
 
-from ldm.modules.diffusionmodules.util import make_ddim_sampling_parameters, make_ddim_timesteps, noise_like, \
-    extract_into_tensor
 
 class DDIM2Sampler(object):
     def __init__(self, model, schedule="linear", **kwargs):
@@ -169,7 +166,8 @@ class DDIM2Sampler(object):
         b = x.shape[0]
         c = conditioning
         t = torch.full((b,), t, device=device, dtype=torch.long)
-
+        if isinstance(unconditional_guidance_scale, list):
+            unconditional_guidance_scale = unconditional_guidance_scale[0]
         if not model_based_CFG:
             if unconditional_conditioning is None or unconditional_guidance_scale == 1.:
                 e_t = model.apply_model(x, t, c)
